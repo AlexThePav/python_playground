@@ -1,3 +1,7 @@
+import dis
+from collections import deque
+
+
 def signFunc(x):
     if x > 0:
         return 1
@@ -16,4 +20,8 @@ def arraySign(nums: list[int]) -> int:
 if __name__ == "__main__":
     nums = [-1,-2,-3,-4,3,2,1]
     print(arraySign(nums))
+
+    dis.dis(arraySign)
+    print(arraySign.__code__.co_names)
+    # dis.dis(signFunc)
     
