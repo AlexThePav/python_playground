@@ -4,6 +4,8 @@ def main():
     the_int = 1
     print(hash(the_int))
     print(id(the_int))
+    the_int = 2
+    print(id(the_int))
     print("---")
 
     the_bool = True
