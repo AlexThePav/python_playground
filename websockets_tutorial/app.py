@@ -2,11 +2,30 @@ import asyncio
 import itertools
 import json
 
-from websockets.asyncio.server import serve
+from websockets.asyncio.server import serve, ServerConnection
 
 from connect4 import PLAYER1, PLAYER2, Connect4
 
-async def handler(websocket):
+import secrets
+
+JOIN = {}
+
+async def handler(websocket: ServerConnection):
+    # Initialize a Connect Four game, the set of WebSocket connections
+    # receiving moves from this game, and secret access token.
+    game = Connect4()
+    connected = {websocket}
+
+    join_key = secrets.token_urlsafe(12)
+    JOIN[join_key] = game,
+
+    try:
+        ...
+    finally:
+        del JOIN[join_key]
+
+
+async def handler(websocket: ServerConnection):
     # Initialize a Connect Four game.
     game = Connect4()
 
