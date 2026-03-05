@@ -48,51 +48,51 @@ async def handler(websocket: ServerConnection):
     await start(websocket)
 
 
-async def handler(websocket: ServerConnection):
-    # Initialize a Connect Four game.
-    game = Connect4()
-
-    # Players take alternate turns, using the same browser.
-    turns = itertools.cycle([PLAYER1, PLAYER2])
-    player = next(turns)
-
-    async for message in websocket:
-        # Parse a "play" event from the UI.
-        event = json.loads(message)
-        assert event["type"] == "play"
-        column = event["column"]
-
-        try:
-            # Play the move.
-            row = game.play(player, column)
-        except ValueError as exc:
-            # Send an "error" event if the move was illegal.
-            event = {
-                "type": "error",
-                "message": str(exc),
-            }
-            await websocket.send(json.dumps(event))
-            continue
-
-        # Send a "play" event to update the UI.
-        event = {
-            "type": "play",
-            "player": player,
-            "column": column,
-            "row": row,
-        }
-        await websocket.send(json.dumps(event))
-
-        # If move is winning, send a "win" event.
-        if game.winner is not None:
-            event = {
-                "type": "win",
-                "player": game.winner,
-            }
-            await websocket.send(json.dumps(event))
-
-        # Alternate turns.
-        player = next(turns)
+# async def handler(websocket: ServerConnection):
+#     # Initialize a Connect Four game.
+#     game = Connect4()
+#
+#     # Players take alternate turns, using the same browser.
+#     turns = itertools.cycle([PLAYER1, PLAYER2])
+#     player = next(turns)
+#
+#     async for message in websocket:
+#         # Parse a "play" event from the UI.
+#         event = json.loads(message)
+#         assert event["type"] == "play"
+#         column = event["column"]
+#
+#         try:
+#             # Play the move.
+#             row = game.play(player, column)
+#         except ValueError as exc:
+#             # Send an "error" event if the move was illegal.
+#             event = {
+#                 "type": "error",
+#                 "message": str(exc),
+#             }
+#             await websocket.send(json.dumps(event))
+#             continue
+#
+#         # Send a "play" event to update the UI.
+#         event = {
+#             "type": "play",
+#             "player": player,
+#             "column": column,
+#             "row": row,
+#         }
+#         await websocket.send(json.dumps(event))
+#
+#         # If move is winning, send a "win" event.
+#         if game.winner is not None:
+#             event = {
+#                 "type": "win",
+#                 "player": game.winner,
+#             }
+#             await websocket.send(json.dumps(event))
+#
+#         # Alternate turns.
+#         player = next(turns)
 
 
 async def main():
