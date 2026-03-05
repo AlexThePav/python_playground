@@ -1,6 +1,8 @@
 import asyncio
-import itertools
 import json
+import http
+import os
+import signal
 
 from websockets.asyncio.server import serve, ServerConnection, broadcast
 
@@ -10,6 +12,12 @@ import secrets
 
 JOIN = {}
 WATCH = {}
+
+
+def health_check(connection: ServerConnection, request):
+    if request.path == "/healthz":
+        return connection.respond(http.HTTPStatus.OK, "OK\n")
+    return connection.respond(http.HTTPStatus.SERVICE_UNAVAILABLE, "No\n")
 
 
 async def play(
@@ -149,6 +157,11 @@ async def handler(websocket: ServerConnection):
 
 
 async def main():
+    # port = int(os.environ.get("PORT", "8001"))
+    # async with serve(handler, "", port, process_request=health_check) as server:
+    #     loop = asyncio.get_running_loop()
+    #     loop.add_signal_handler(signal.SIGTERM, server.close)
+    #     await server.wait_closed()
     async with serve(handler, "", 8001) as server:
         await server.serve_forever()
 
